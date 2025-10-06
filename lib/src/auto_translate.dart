@@ -168,6 +168,7 @@ class AutoTranslateText extends StatelessWidget {
           key: ValueKey('$text-$selectedLanguage'),
           future: languageProvider.translateText(text, selectedLanguage),
           builder: (context, snapshot) {
+            print('FutureBuilder snapshot for text "$text": ${snapshot.connectionState}, hasData: ${snapshot.hasData}, hasError: ${snapshot.hasError}');
             if (snapshot.connectionState == ConnectionState.waiting) {
               print('Translation in progress for: "$text"');
               return Text(
