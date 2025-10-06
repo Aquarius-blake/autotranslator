@@ -154,6 +154,7 @@ class _AutoTranslateTextState extends State<AutoTranslateText> {
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     
+    // ignore: unnecessary_null_comparison
     if (languageProvider == null) {
       print('Error: LanguageProvider not found in widget tree for text: ${widget.text}');
       return Text(

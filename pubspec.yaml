@@ -1,7 +1,9 @@
 name: autotranslator
-description: "A new Flutter package project."
-version: 0.0.1
-homepage: "https://github.com/Aquarius-blake/autotranslator"
+description: A Flutter package for automatic text translation with online and offline support
+version: 0.1.0
+homepage: https://github.com/Aquarius-blake/autotranslator
+repository: https://github.com/Aquarius-blake/autotranslator
+issue_tracker:  https://github.com/Aquarius-blake/autotranslator/issues
 
 environment:
   sdk: ^3.8.1
