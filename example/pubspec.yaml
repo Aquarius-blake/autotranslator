@@ -1,0 +1,18 @@
+```yaml
+   name: auto_translate_example
+   description: Example app for the auto_translate package.
+   publish_to: 'none'
+
+   environment:
+     sdk: '>=2.17.0 <3.0.0'
+     flutter: '>=3.0.0'
+
+   dependencies:
+     flutter:
+       sdk: flutter
+     auto_translate:
+       path: ../
+     provider: ^6.0.0
+     translator: ^0.1.7
+     connectivity_plus: ^6.0.0
+   ```
