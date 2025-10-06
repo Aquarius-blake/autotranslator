@@ -142,14 +142,16 @@ class AutoTranslateText extends StatelessWidget {
         overflow: overflow,
       );
     }
+    
 
     // Force FutureBuilder to rebuild when selectedLanguage changes
     return Selector<LanguageProvider, String>(
       selector: (_, provider) => provider.selectedLanguage,
       builder: (context, selectedLanguage, _) {
+        final future = languageProvider.translateText(text, selectedLanguage);
         print('Rebuilding AutoTranslateText for text: "$text" with language: $selectedLanguage');
         return FutureBuilder<String>(
-          future: languageProvider.translateText(text, selectedLanguage),
+          future: future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               print('Translation in progress for: "$text"');
