@@ -147,12 +147,12 @@ class AutoTranslateText extends StatelessWidget {
     return Selector<LanguageProvider, String>(
       selector: (_, provider) => provider.selectedLanguage,
       builder: (context, selectedLanguage, _) {
-        debugPrint('Rebuilding AutoTranslateText for text: "$text" with language: $selectedLanguage');
+        print('Rebuilding AutoTranslateText for text: "$text" with language: $selectedLanguage');
         return FutureBuilder<String>(
           future: languageProvider.translateText(text, selectedLanguage),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              debugPrint('Translation in progress for: "$text"');
+              print('Translation in progress for: "$text"');
               return Text(
                 text,
                 style: style,
@@ -161,7 +161,7 @@ class AutoTranslateText extends StatelessWidget {
                 overflow: overflow,
               );
             } else if (snapshot.hasError) {
-              debugPrint('Error translating text "$text": ${snapshot.error}');
+              print('Error translating text "$text": ${snapshot.error}');
               return Text(
                 text,
                 style: style,
@@ -171,7 +171,7 @@ class AutoTranslateText extends StatelessWidget {
               );
             } else {
               final translatedText = snapshot.data ?? text;
-              debugPrint('Rendered translated text: "$translatedText"');
+              print('Rendered translated text: "$translatedText"');
               return Text(
                 translatedText,
                 style: style,
@@ -218,6 +218,7 @@ class AutoTranslateApp extends StatelessWidget {
                         onChanged: (value) {
                           if (value != null) {
                             languageProvider.setLanguage(value);
+                            print('Language changed to: $value');
                           }
                         },
                       ),
