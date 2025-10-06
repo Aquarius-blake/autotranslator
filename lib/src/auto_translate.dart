@@ -112,7 +112,7 @@ class LanguageProvider with ChangeNotifier {
 }
 
 // Widget to wrap text that needs translation
-class AutoTranslateText extends StatelessWidget {
+class AutoTranslateText extends StatefulWidget {
   final String text;
   final TextStyle? style;
   final TextAlign? textAlign;
@@ -129,17 +129,22 @@ class AutoTranslateText extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<AutoTranslateText> createState() => _AutoTranslateTextState();
+}
+
+class _AutoTranslateTextState extends State<AutoTranslateText> {
+  @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
     
     if (languageProvider == null) {
-      debugPrint('Error: LanguageProvider not found in widget tree for text: $text');
+      debugPrint('Error: LanguageProvider not found in widget tree for text: ${widget.text}');
       return Text(
-        text,
-        style: style,
-        textAlign: textAlign,
-        maxLines: maxLines,
-        overflow: overflow,
+        widget.text,
+        style: widget.style,
+        textAlign: widget.textAlign,
+        maxLines: widget.maxLines,
+        overflow: widget.overflow,
       );
     }
     
@@ -148,38 +153,38 @@ class AutoTranslateText extends StatelessWidget {
     return Selector<LanguageProvider, String>(
       selector: (_, provider) => provider.selectedLanguage,
       builder: (context, selectedLanguage, _) {
-        final future = languageProvider.translateText(text, selectedLanguage);
-        print('Rebuilding AutoTranslateText for text: "$text" with language: $selectedLanguage');
+        final future = languageProvider.translateText(widget.text, selectedLanguage);
+        print('Rebuilding AutoTranslateText for text: "${widget.text}" with language: $selectedLanguage');
         return FutureBuilder<String>(
           future: future,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              print('Translation in progress for: "$text"');
+              print('Translation in progress for: "${widget.text}"');
               return Text(
-                text,
-                style: style,
-                textAlign: textAlign,
-                maxLines: maxLines,
-                overflow: overflow,
+                widget.text,
+                style: widget.style,
+                textAlign: widget.textAlign,
+                maxLines: widget.maxLines,
+                overflow: widget.overflow,
               );
             } else if (snapshot.hasError) {
-              print('Error translating text "$text": ${snapshot.error}');
+              print('Error translating text "${widget.text}": ${snapshot.error}');
               return Text(
-                text,
-                style: style,
-                textAlign: textAlign,
-                maxLines: maxLines,
-                overflow: overflow,
+                widget.text,
+                style: widget.style,
+                textAlign: widget.textAlign,
+                maxLines: widget.maxLines,
+                overflow: widget.overflow,
               );
             } else {
-              final translatedText = snapshot.data ?? text;
+              final translatedText = snapshot.data ?? widget.text;
               print('Rendered translated text: "$translatedText"');
               return Text(
                 translatedText,
-                style: style,
-                textAlign: textAlign,
-                maxLines: maxLines,
-                overflow: overflow,
+                style: widget.style,
+                textAlign: widget.textAlign,
+                maxLines: widget.maxLines,
+                overflow: widget.overflow,
               );
             }
           },
