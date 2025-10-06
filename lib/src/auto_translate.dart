@@ -176,7 +176,7 @@ class _AutoTranslateTextState extends State<AutoTranslateText> {
           future: languageProvider.translateText(widget.text, selectedLanguage),
           builder: (context, snapshot) {
             print('FutureBuilder snapshot for text "${widget.text}": ${snapshot.connectionState}, hasData: ${snapshot.hasData}, hasError: ${snapshot.hasError}');
-            if (snapshot.connectionState == ConnectionState.waiting) {
+            if (snapshot.connectionState == ConnectionState.waiting && snapshot.hasData == false) {
               print('Translation in progress for: "${widget.text}"');
               return Text(
                 widget.text,
