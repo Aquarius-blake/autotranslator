@@ -65,34 +65,48 @@ class LanguageProvider with ChangeNotifier {
   }
 
   void setLanguage(String languageCode) {
+    debugPrint('Setting language to: $languageCode');
     _selectedLanguage = languageCode;
     notifyListeners();
   }
 
   Future<void> _checkConnectivity() async {
-    final connectivityResults = await connectivity.checkConnectivity();
-    _isOnline = connectivityResults.any((result) =>
-        result == ConnectivityResult.wifi ||
-        result == ConnectivityResult.mobile ||
-        result == ConnectivityResult.ethernet);
-    notifyListeners();
+    try {
+      final connectivityResults = await connectivity.checkConnectivity();
+      _isOnline = connectivityResults.any((result) =>
+          result == ConnectivityResult.wifi ||
+          result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.ethernet);
+      debugPrint('Connectivity status: ${_isOnline ? 'Online' : 'Offline'}');
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Connectivity check error: $e');
+      _isOnline = false;
+      notifyListeners();
+    }
   }
 
   Future<String> translateText(String text, String toLanguage) async {
+    debugPrint('Translating text: "$text" to language: $toLanguage');
     await _checkConnectivity();
     
     if (_isOnline) {
       try {
         final translation = await translator.translate(text, to: toLanguage);
+        debugPrint('Online translation result: ${translation.text}');
         return translation.text;
       } catch (e) {
         debugPrint('Online translation error: $e');
         // Fallback to offline translation
-        return _offlineTranslations[toLanguage]?[text] ?? text;
+        final offlineResult = _offlineTranslations[toLanguage]?[text] ?? text;
+        debugPrint('Falling back to offline translation: $offlineResult');
+        return offlineResult;
       }
     } else {
       // Use offline translations
-      return _offlineTranslations[toLanguage]?[text] ?? text;
+      final offlineResult = _offlineTranslations[toLanguage]?[text] ?? text;
+      debugPrint('Using offline translation: $offlineResult');
+      return offlineResult;
     }
   }
 }
@@ -117,42 +131,63 @@ class AutoTranslateText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final languageProvider = Provider.of<LanguageProvider>(context);
+    
+    if (languageProvider == null) {
+      debugPrint('Error: LanguageProvider not found in widget tree for text: $text');
+      return Text(
+        text,
+        style: style,
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      );
+    }
 
-    return FutureBuilder<String>(
-      future: languageProvider.translateText(text, languageProvider.selectedLanguage),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Text(
-            text,
-            style: style,
-            textAlign: textAlign,
-            maxLines: maxLines,
-            overflow: overflow,
-          );
-        } else if (snapshot.hasError) {
-          debugPrint('Error translating text: ${snapshot.error}');
-          return Text(
-            text,
-            style: style,
-            textAlign: textAlign,
-            maxLines: maxLines,
-            overflow: overflow,
-          );
-        } else {
-          return Text(
-            snapshot.data ?? text,
-            style: style,
-            textAlign: textAlign,
-            maxLines: maxLines,
-            overflow: overflow,
-          );
-        }
+    // Force FutureBuilder to rebuild when selectedLanguage changes
+    return Selector<LanguageProvider, String>(
+      selector: (_, provider) => provider.selectedLanguage,
+      builder: (context, selectedLanguage, _) {
+        debugPrint('Rebuilding AutoTranslateText for text: "$text" with language: $selectedLanguage');
+        return FutureBuilder<String>(
+          future: languageProvider.translateText(text, selectedLanguage),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              debugPrint('Translation in progress for: "$text"');
+              return Text(
+                text,
+                style: style,
+                textAlign: textAlign,
+                maxLines: maxLines,
+                overflow: overflow,
+              );
+            } else if (snapshot.hasError) {
+              debugPrint('Error translating text "$text": ${snapshot.error}');
+              return Text(
+                text,
+                style: style,
+                textAlign: textAlign,
+                maxLines: maxLines,
+                overflow: overflow,
+              );
+            } else {
+              final translatedText = snapshot.data ?? text;
+              debugPrint('Rendered translated text: "$translatedText"');
+              return Text(
+                translatedText,
+                style: style,
+                textAlign: textAlign,
+                maxLines: maxLines,
+                overflow: overflow,
+              );
+            }
+          },
+        );
       },
     );
   }
 }
 
-// Example widget
+// Example usage widget
 class AutoTranslateApp extends StatelessWidget {
   const AutoTranslateApp({Key? key}) : super(key: key);
 
