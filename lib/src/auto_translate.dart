@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'dart:async';
 
 // Offline translation data (example key-value store)
 const Map<String, Map<String, String>> _offlineTranslations = {
@@ -31,13 +30,16 @@ const Map<String, Map<String, String>> _offlineTranslations = {
 // Language provider to manage the selected language and translation mode
 class LanguageProvider with ChangeNotifier {
   String _selectedLanguage = 'en'; // Default language is English
-  final GoogleTranslator _translator = GoogleTranslator();
+  final GoogleTranslator translator; // Made public for testing
+  final Connectivity connectivity; // Made public for testing
   bool _isOnline = true;
 
   String get selectedLanguage => _selectedLanguage;
   bool get isOnline => _isOnline;
 
-  LanguageProvider() {
+  LanguageProvider({GoogleTranslator? translator, Connectivity? connectivity})
+      : translator = translator ?? GoogleTranslator(),
+        connectivity = connectivity ?? Connectivity() {
     _checkConnectivity();
   }
 
@@ -47,8 +49,11 @@ class LanguageProvider with ChangeNotifier {
   }
 
   Future<void> _checkConnectivity() async {
-    final connectivityResult = await Connectivity().checkConnectivity();
-    _isOnline = connectivityResult != ConnectivityResult.none;
+    final connectivityResults = await connectivity.checkConnectivity();
+    _isOnline = connectivityResults.any((result) =>
+        result == ConnectivityResult.wifi ||
+        result == ConnectivityResult.mobile ||
+        result == ConnectivityResult.ethernet);
     notifyListeners();
   }
 
@@ -57,7 +62,7 @@ class LanguageProvider with ChangeNotifier {
     
     if (_isOnline) {
       try {
-        final translation = await _translator.translate(text, to: toLanguage);
+        final translation = await translator.translate(text, to: toLanguage);
         return translation.text;
       } catch (e) {
         debugPrint('Online translation error: $e');
@@ -126,7 +131,7 @@ class AutoTranslateText extends StatelessWidget {
   }
 }
 
-// Example usage widget
+// Example widget
 class AutoTranslateApp extends StatelessWidget {
   const AutoTranslateApp({Key? key}) : super(key: key);
 
