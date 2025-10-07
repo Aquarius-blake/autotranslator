@@ -5,7 +5,7 @@ import 'package:translator/translator.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-// Offline translation data (example key-value store)
+// Offline translation data
 const Map<String, Map<String, String>> _offlineTranslations = {
   'en': {
     'Welcome to my application!': 'Welcome to my application!',
@@ -53,8 +53,8 @@ const Map<String, Map<String, String>> _offlineTranslations = {
 // Language provider to manage the selected language and translation mode
 class LanguageProvider with ChangeNotifier {
   String _selectedLanguage = 'en'; // Default language is English
-  final GoogleTranslator translator; // Made public for testing
-  final Connectivity connectivity; // Made public for testing
+  final GoogleTranslator translator;
+  final Connectivity connectivity; 
   bool _isOnline = true;
 
   String get selectedLanguage => _selectedLanguage;
@@ -134,7 +134,7 @@ class AutoTranslateText extends StatefulWidget {
   final TextAlign? textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
-  final Key? key; // Added to force rebuild
+  final Key? key; 
 
   const AutoTranslateText({
     this.key,
