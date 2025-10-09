@@ -15,3 +15,4 @@
      provider: ^6.1.5+1
      translator: ^1.0.4+1
      connectivity_plus: ^7.0.0
+     connectivity_plus_platform_interface: ^2.0.1
