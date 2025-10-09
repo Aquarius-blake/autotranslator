@@ -17,9 +17,9 @@ Add the following to your `pubspec.yaml`:
 ```yaml
 dependencies:
   auto_translate: ^0.1.0
-  provider: ^6.0.0
-  translator: ^0.1.7
-  connectivity_plus: ^6.0.0
+  provider: ^6.1.5+1
+  translator: ^1.0.4+1
+  connectivity_plus: ^7.0.0
 ```
 
 Run `flutter pub get` to install the dependencies.
