@@ -1,4 +1,4 @@
-name: autotranslator
+name: autotranslator_widget
 description: A Flutter package for automatic text translation with online and offline support
 version: 0.1.0
 homepage: https://github.com/Aquarius-blake/autotranslator

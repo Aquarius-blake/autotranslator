@@ -1,5 +1,5 @@
 
-   name: autotranslator_example
+   name: autotranslator_widget_example
    description: Example app for the auto_translate package.
    publish_to: 'none'
 
@@ -10,7 +10,7 @@
    dependencies:
      flutter:
        sdk: flutter
-     autotranslator:
+     autotranslator_widget:
        path: ../
      provider: ^6.1.5+1
      translator: ^1.0.4+1

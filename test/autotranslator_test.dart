@@ -3,7 +3,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:translator/translator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:autotranslator/autotranslator.dart';
+import 'package:autotranslator_widget/autotranslator.dart';
 import 'autotranslator_test.mocks.dart';
 
 // Mock classes
