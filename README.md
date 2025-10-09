@@ -90,7 +90,7 @@ Consumer<LanguageProvider>(
 
 ### 4. Add Offline Translations
 
-Update the `_offlineTranslations` map in `lib/auto_translate.dart` to include your app's text strings:
+Update the `_offlineTranslations` map in `lib/src/auto_translate.dart` to include your app's text strings:
 
 ```dart
 const Map<String, Map<String, String>> _offlineTranslations = {
