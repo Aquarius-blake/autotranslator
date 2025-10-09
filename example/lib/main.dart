@@ -1,5 +1,5 @@
 
-   import 'package:autotranslator_widget/autotranslator.dart';
+   import 'package:autotranslator_widget/autotranslator_widget.dart';
 import 'package:flutter/material.dart';
    import 'package:provider/provider.dart';
 
