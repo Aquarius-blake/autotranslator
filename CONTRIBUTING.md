@@ -32,30 +32,38 @@ Fork autotranslator on GitHub
 
 
 Clone Your Fork
+```bash
 git clone https://github.com/YOUR_USERNAME/autotranslator.git
 cd autotranslator
-
+```
 
 Add Upstream Remote
+```bash
 git remote add upstream https://github.com/yourusername/autotranslator.git
-
+```
 
 Install Dependencies
+```dart
 flutter pub get
-
+```
 
 Generate Mocks (for tests)
+```dart
 flutter pub run build_runner build
-
+```
 
 Run Tests
+```dart
 flutter test
-
+```
 
 Run Example App
+```bash
 cd example
+```
+```dart
 flutter run
-
+```
 
 
 Repository Structure
@@ -73,8 +81,9 @@ autotranslator/
 Development Workflow
 
 Create Feature Branch
+```bash
 git checkout -b feature/add-language-support
-
+```
 
 Make Changes
 
@@ -89,13 +98,15 @@ cd example && flutter run
 
 
 Commit Changes
+```bash
 git add .
 git commit -m "feat: add support for 10 new languages"
-
+```
 
 Push Branch
+```bash
 git push origin feature/add-language-support
-
+```
 
 Open Pull Request (see Pull Requests)
 
