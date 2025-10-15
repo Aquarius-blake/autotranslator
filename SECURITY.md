@@ -59,7 +59,7 @@ Proof of Concept:
 [Minimal code that demonstrates the issue]
 
 Suggested Fix:[Your proposed solution]
-
+```
 ---
 
 ## Triage and Response Process
