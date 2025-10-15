@@ -469,7 +469,10 @@ Question: Discussions
 Support: Flutter Discord
 
 
-Acknowledgements
+### Acknowledgements
+
 Thank you to all contributors! 🎉
+
 Last Updated: October 15, 2025
+
 Template based on Flutter Contributing Guide
