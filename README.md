@@ -1,3 +1,4 @@
+<!-- GitAds-Verify: NAYM8W7JKRYXG3KN25TXXA4NBMN9SLC6 -->
 # Auto Translate
 
 A Flutter package for automatic text translation in your app, supporting both online and offline modes. It uses the `translator` package for online translations via Google Translate API and a static key-value map for offline translations. The package integrates with `provider` for state management and `connectivity_plus` to detect network status.
