@@ -1,4 +1,11 @@
 include: package:flutter_lints/flutter.yaml
 
+linter:
+  rules:
+    # You can keep the default flutter_lints rules or add/override any here.
+    # Example overrides (optional):
+    # - avoid_print: false
+    # - prefer_const_constructors: true
+
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options
