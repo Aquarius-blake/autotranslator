@@ -54,6 +54,7 @@ const Map<String, Map<String, String>> offlineTranslations = {
     'Welcome Back': 'Welcome Back',
     'Agenda': 'Agenda',
     'Network': 'Network',
+    'Select Language': 'Select Language',
   },
   'es': {
     'Welcome to my application!': '¡Bienvenido a mi aplicación!',
@@ -109,6 +110,7 @@ const Map<String, Map<String, String>> offlineTranslations = {
     'Welcome Back': '¡Bienvenido de nuevo!',
     'Agenda': 'Agenda',
     'Network': 'Red',
+    'Select Language': 'Seleccionar idioma',
   },
   'fr': {
     'Welcome to my application!': 'Bienvenue dans mon application !',
@@ -164,6 +166,7 @@ const Map<String, Map<String, String>> offlineTranslations = {
     'Welcome Back': 'Bon retour',
     'Agenda': 'Agenda',
     'Network': 'Réseau',
+    'Select Language': 'Choisir la langue',
   },
   'de': {
     'Welcome to my application!': 'Willkommen in meiner Anwendung!',
@@ -219,5 +222,6 @@ const Map<String, Map<String, String>> offlineTranslations = {
     'Welcome Back': 'Willkommen zurück',
     'Agenda': 'Agenda',
     'Network': 'Netzwerk',
+    'Select Language': 'Sprache auswählen',
   },
 };
