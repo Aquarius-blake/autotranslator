@@ -1,7 +1,13 @@
 # Changelog
 
 ```markdown
+   ## 0.1.3
+   - Updated Offline translations.
+   - Increased Timeout Duration.
    
+   ## 0.1.2
+   - Updated Offline translations.
+
    ## 0.1.1
    - Updated Offline translations.
 
