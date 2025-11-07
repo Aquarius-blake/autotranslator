@@ -1,5 +1,9 @@
+# Changelog
+
 ```markdown
-   # Changelog
+   
+   ## 0.1.1
+   - Updated Offline translations.
 
    ## 0.1.0
    - Initial release of `auto_translate`.
