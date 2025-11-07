@@ -3,7 +3,7 @@ description: A Flutter package for automatic text translation with online and of
 version: 0.1.1
 homepage: https://github.com/Aquarius-blake/autotranslator
 repository: https://github.com/Aquarius-blake/autotranslator
-issue_tracker:  https://github.com/Aquarius-blake/autotranslator/issues
+issue_tracker: https://github.com/Aquarius-blake/autotranslator/issues
 
 environment:
   sdk: ^3.8.1
