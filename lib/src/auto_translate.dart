@@ -62,7 +62,7 @@ class LanguageProvider with ChangeNotifier {
     if (_isOnline) {
       try {
         final translation = await translator.translate(text, to: toLanguage).timeout(
-          const Duration(seconds: 10),
+          const Duration(seconds: 20),
           onTimeout: () {
             print('Online translation timed out for: "$text"');
             throw TimeoutException('Translation request timed out');
