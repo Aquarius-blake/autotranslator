@@ -29,8 +29,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dart pub global run pub_release create-pr \
-            --auto-answer \
-            --no-test \
+            --[no-]autoAnswer \
+            --[no-]test \
             --no-format \
             --git \
             --verbose
