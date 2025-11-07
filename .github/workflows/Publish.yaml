@@ -1,0 +1,45 @@
+name: Publish to pub.dev
+
+# Trigger only when a new tag that looks like a version is pushed
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'   # v1.2.3, v0.1.0, v2.0.0-beta.1, etc.
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write               # required for OIDC auth with pub.dev
+
+    steps:
+      # 1. Checkout the repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Set up Flutter
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      # 3. Get dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. Run tests (fail fast)
+      - name: Run tests
+        run: flutter test
+
+      # 5. Verify no lint / formatting issues
+      - name: Run dart format check
+        run: dart format --set-exit-if-changed .
+
+      # 6. Dry-run publish (helps catch pubspec problems early)
+      - name: Dry-run publish
+        run: flutter pub publish --dry-run
+
+      # 7. Publish to pub.dev using OIDC (no API token needed)
+      - name: Publish package
+        run: flutter pub publish --force
