@@ -1,54 +1,13 @@
 import 'dart:async';
 
+import 'package:autotranslator_widget/src/Translations.dart';
 import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
 import 'package:provider/provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 // Offline translation data
-const Map<String, Map<String, String>> _offlineTranslations = {
-  'en': {
-    'Welcome to my application!': 'Welcome to my application!',
-    'This is a sample text to demonstrate translation.': 'This is a sample text to demonstrate translation.',
-    'My App': 'My App',
-    'Register': 'Register',
-    'Login': 'Login',
-    'Logout': 'Logout',
-    'Settings': 'Settings',
-    'Profile': 'Profile',
-    
-  },
-  'es': {
-    'Welcome to my application!': '¡Bienvenido a mi aplicación!',
-    'This is a sample text to demonstrate translation.': 'Este es un texto de muestra para demostrar la traducción.',
-    'My App': 'Mi Aplicación',
-    'Register': 'Registrarse',
-    'Login': 'Iniciar sesión',
-    'Logout': 'Cerrar sesión',
-    'Settings': 'Configuraciones',
-    'Profile': 'Perfil',
-  },
-  'fr': {
-    'Welcome to my application!': 'Bienvenue dans mon application !',
-    'This is a sample text to demonstrate translation.': 'Ceci est un texte d\'exemple pour démontrer la traduction.',
-    'My App': 'Mon Application',
-    'Register': 'S\'inscrire',
-    'Login': 'Se connecter',
-    'Logout': 'Se déconnecter',
-    'Settings': 'Paramètres',
-    'Profile': 'Profil',
-  },
-  'de': {
-    'Welcome to my application!': 'Willkommen in meiner Anwendung!',
-    'This is a sample text to demonstrate translation.': 'Dies ist ein Beispieltext zur Demonstration der Übersetzung.',
-    'My App': 'Meine App',
-    'Register': 'Registrieren',
-    'Login': 'Anmelden',
-    'Logout': 'Abmelden',
-    'Settings': 'Einstellungen',
-    'Profile': 'Profil',
-  },
-};
+const Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
 
 // Language provider to manage the selected language and translation mode
 class LanguageProvider with ChangeNotifier {
