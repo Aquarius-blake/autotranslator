@@ -29,5 +29,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dart pub global run pub_release create-pr \
-            --no-confirm \
             --github-token $GITHUB_TOKEN
