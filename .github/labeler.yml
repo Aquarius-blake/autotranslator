@@ -1,0 +1,68 @@
+ui:
+  - 'lib/**/*Widgets*.dart'
+  - 'lib/**/*Screen*.dart'
+  - 'lib/**/*page*.dart'
+  - 'lib/ui/**/*'
+  - 'lib/Screens/*'
+  - 'lib/Screens/**/*'
+  - 'lib/Animations/*'
+  - 'lib/presentation/**/*'
+
+state:
+  - 'lib/**/*provider*.dart'
+  - 'lib/**/*bloc*.dart'
+  - 'lib/**/*cubit*.dart'
+  - 'lib/**/*notifier*.dart'
+  - 'lib/state/**/*'
+  - 'lib/store/**/*'
+  - 'lib/Providers/*'
+
+core:
+  - 'lib/core/**/*'
+  - 'lib/services/**/*'
+  - 'lib/repositories/**/*'
+  - 'lib/data/**/*'
+  - 'lib/Models/**/*'
+  - 'lib/utils/**/*'
+
+assets:
+  - 'assets/**/*'
+  - 'pubspec.yaml'
+  - 'pubspec.lock'
+
+android:
+  - 'android/**/*'
+  - 'android/app/src/main/AndroidManifest.xml'
+  - 'android/app/build.gradle'
+
+ios:
+  - 'ios/**/*'
+  - 'ios/Runner/Info.plist'
+  - 'ios/Runner.xcodeproj/**/*'
+
+test:
+  - 'test/**/*'
+  - 'integration_test/**/*'
+  - '**/*_test.dart'
+  - '**/*_spec.dart'
+
+ci:
+  - '.github/workflows/**/*'
+  - '.github/*'
+  - 'fastlane/**/*'
+  - 'scripts/**/*'
+
+dependencies:
+  - 'pubspec.yaml'
+  - 'pubspec.lock'
+
+docs:
+  - 'README.md'
+  - 'CONTRIBUTING.md'
+  - 'CHANGELOG.md'
+  - 'docs/**/*'
+  - '**/*.md'
+
+bug:
+  - 'lib/**/*'
+  - 'libnew/**/*'
