@@ -40,7 +40,7 @@ class LanguageProvider2 with ChangeNotifier {
       final online = results == ConnectivityResult.mobile ||
           results == ConnectivityResult.wifi ||
           results == ConnectivityResult.ethernet;
-
+        print(' Connectivity changed: ${online ? 'Online' : 'Offline'}');
       if (online != _isOnline) {
         _isOnline = online;
         notifyListeners();
@@ -103,6 +103,7 @@ class LanguageProvider2 with ChangeNotifier {
 /// Widget for automatic translation with cached future
 class AutoTranslateText2 extends StatefulWidget {
   final String text;
+  final bool? softwrap;
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;
@@ -111,6 +112,7 @@ class AutoTranslateText2 extends StatefulWidget {
   const AutoTranslateText2({
     super.key,
     required this.text,
+    this.softwrap,
     this.style,
     this.textAlign,
     this.maxLines,
@@ -167,6 +169,7 @@ class _AutoTranslateText2State extends State<AutoTranslateText2> {
         return Text(
           text,
           style: widget.style,
+          softWrap: widget.softwrap,
           textAlign: widget.textAlign,
           maxLines: widget.maxLines,
           overflow: widget.overflow,
