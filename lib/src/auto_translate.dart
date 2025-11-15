@@ -1,176 +1,190 @@
 import 'dart:async';
-
 import 'package:autotranslator_widget/src/Translations.dart';
 import 'package:flutter/material.dart';
-import 'package:translator/translator.dart';
 import 'package:provider/provider.dart';
+import 'package:translator/translator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-// Offline translation data
+/// Offline data
 const Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
 
-// Language provider to manage the selected language and translation mode
+/// Language provider with caching & efficient connectivity monitoring
 class LanguageProvider with ChangeNotifier {
-  String _selectedLanguage = 'en'; // Default language is English
   final GoogleTranslator translator;
-  final Connectivity connectivity; 
+  final Connectivity connectivity;
+
+  String _selectedLanguage = 'en';
   bool _isOnline = true;
+
+  /// Translation cache: { "es": { "Hello": "Hola" } }
+  final Map<String, Map<String, String>> _cache = {};
+
+  StreamSubscription? _connectivitySubscription;
 
   String get selectedLanguage => _selectedLanguage;
   bool get isOnline => _isOnline;
 
-  LanguageProvider({GoogleTranslator? translator, Connectivity? connectivity})
-      : translator = translator ?? GoogleTranslator(),
+  LanguageProvider({
+    GoogleTranslator? translator,
+    Connectivity? connectivity,
+  })  : translator = translator ?? GoogleTranslator(),
         connectivity = connectivity ?? Connectivity() {
-    _checkConnectivity();
+    _initConnectivityListener();
   }
 
+//   Future<bool> _hasInternet() async {
+//   try {
+//     final result = await InternetAddress.lookup('google.com')
+//         .timeout(const Duration(seconds: 3));
+//     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//       return true;
+//     }
+//   } catch (_) {}
+//   return false;
+// }
+
+  /// listen to connectivity changes ONCE.
+  void _initConnectivityListener() {
+   
+  InternetConnection().onStatusChange.listen((status) {
+  _isOnline = status == InternetStatus.connected;
+  print(' Internet connection status changed: ${_isOnline ? 'Online' : 'Offline'}');
+  notifyListeners();
+});
+  }
+
+  /// Set language with tiny debounce to avoid rebuild storms
+  Timer? _debounce;
   void setLanguage(String languageCode) {
-    print('Setting language to: $languageCode');
-    _selectedLanguage = languageCode;
-    notifyListeners();
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 120), () {
+      _selectedLanguage = languageCode;
+      notifyListeners();
+    });
   }
 
-  Future<void> _checkConnectivity() async {
-    try {
-      final connectivityResults = await connectivity.checkConnectivity().timeout(
-        const Duration(seconds: 15),
-        onTimeout: () {
-          print('Connectivity check timed out, assuming offline');
-          return [ConnectivityResult.none];
-        },
-      );
-      _isOnline = connectivityResults.any((result) =>
-          result == ConnectivityResult.wifi ||
-          result == ConnectivityResult.mobile ||
-          result == ConnectivityResult.ethernet);
-      print('Connectivity status: ${_isOnline ? 'Online' : 'Offline'}');
-      notifyListeners();
-      return;
-    } catch (e) {
-      print('Connectivity check error: $e');
-      _isOnline = false;
-      notifyListeners();
-      return;
-    }
-  }
-
+  /// Attempts to translate with cache → online → offline fallback
   Future<String> translateText(String text, String toLanguage) async {
-    debugPrint('Translating text: "$text" to language: $toLanguage');
-    await _checkConnectivity();
-    
+    // Return cached value immediately
+    if (_cache[toLanguage] != null && _cache[toLanguage]![text] != null) {
+      return _cache[toLanguage]![text]!;
+    }
+
+    // Try online translation if available
     if (_isOnline) {
       try {
-        final translation = await translator.translate(text, to: toLanguage).timeout(
-          const Duration(seconds: 15),
-          onTimeout: () {
-            print('Online translation timed out for: "$text"');
-            throw TimeoutException('Translation request timed out');
-          },
-        );
-        print('Online translation result: ${translation.text}');
-        return translation.text;
-      } catch (e) {
-        print('Online translation error: $e');
-        // Fallback to offline translation
-        final offlineResult = _offlineTranslations[toLanguage]?[text] ?? text;
-        print('Falling back to offline translation: $offlineResult');
-        return offlineResult;
+        final result = await translator
+            .translate(text, to: toLanguage)
+            .timeout(const Duration(seconds: 12));
+
+        final translated = result.text;
+
+        // Cache result
+        _cache.putIfAbsent(toLanguage, () => {})[text] = translated;
+
+        return translated;
+      } catch (_) {
+        // Online failed → continue to offline fallback
       }
-    } else {
-      // Use offline translations
-      final offlineResult = _offlineTranslations[toLanguage]?[text] ?? text;
-      print('Using offline translation: $offlineResult');
-      return offlineResult;
     }
+
+    // Offline fallback
+    final offlineResult = _offlineTranslations[toLanguage]?[text] ?? text;
+
+    // Cache offline result
+    _cache.putIfAbsent(toLanguage, () => {})[text] = offlineResult;
+
+    return offlineResult;
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription?.cancel();
+    _debounce?.cancel();
+    super.dispose();
   }
 }
 
-// Widget to wrap text that needs translation
+/// Widget for automatic translation with cached future
 class AutoTranslateText extends StatefulWidget {
   final String text;
+  final bool? softwrap;
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
-  final Key? key; 
 
   const AutoTranslateText({
-    this.key,
+    super.key,
     required this.text,
+    this.softwrap,
     this.style,
     this.textAlign,
     this.maxLines,
     this.overflow,
-  }) : super(key: key);
+  });
 
   @override
   State<AutoTranslateText> createState() => _AutoTranslateTextState();
 }
 
 class _AutoTranslateTextState extends State<AutoTranslateText> {
+  Future<String>? _future;
+  String _lastLanguage = '';
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _triggerTranslationIfNeeded();
+  }
+
+  @override
+  void didUpdateWidget(covariant AutoTranslateText oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _future = null;
+      _triggerTranslationIfNeeded();
+    }
+  }
+
+  void _triggerTranslationIfNeeded() {
+    final provider = Provider.of<LanguageProvider>(context, listen: false);
+
+    if (_future == null || _lastLanguage != provider.selectedLanguage) {
+      _lastLanguage = provider.selectedLanguage;
+      _future = provider.translateText(widget.text, _lastLanguage);
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<LanguageProvider>(context);
-    
-    // ignore: unnecessary_null_comparison
-    if (languageProvider == null) {
-      print('Error: LanguageProvider not found in widget tree for text: ${widget.text}');
-      return Text(
-        widget.text,
-        style: widget.style,
-        textAlign: widget.textAlign,
-        maxLines: widget.maxLines,
-        overflow: widget.overflow,
-      );
+    final provider = Provider.of<LanguageProvider>(context);
+
+    // If language changes, trigger new future automatically
+    if (_lastLanguage != provider.selectedLanguage) {
+      _triggerTranslationIfNeeded();
     }
 
-    // Force FutureBuilder to rebuild when selectedLanguage changes
-    return Selector<LanguageProvider, String>(
-      selector: (_, provider) => provider.selectedLanguage,
-      builder: (context, selectedLanguage, _) {
-        print('Rebuilding AutoTranslateText for text: "${widget.text}" with language: $selectedLanguage');
-        return FutureBuilder<String>(
-          // Use a unique key to ensure Future is re-run
-          key: ValueKey('${widget.text}-$selectedLanguage'),
-          future: languageProvider.translateText(widget.text, selectedLanguage),
-          builder: (context, snapshot) {
-            print('FutureBuilder snapshot for text "${widget.text}": ${snapshot.connectionState}, hasData: ${snapshot.hasData}, hasError: ${snapshot.hasError}');
-            if (snapshot.connectionState == ConnectionState.waiting && snapshot.hasData == false) {
-              print('Translation in progress for: "${widget.text}"');
-              return Text(
-                widget.text,
-                style: widget.style,
-                textAlign: widget.textAlign,
-                maxLines: widget.maxLines,
-                overflow: widget.overflow,
-              );
-            } else if (snapshot.hasError) {
-              print('Error translating text "${widget.text}": ${snapshot.error}');
-              return Text(
-                widget.text,
-                style: widget.style,
-                textAlign: widget.textAlign,
-                maxLines: widget.maxLines,
-                overflow: widget.overflow,
-              );
-            } else {
-              final translatedText = snapshot.data ?? widget.text;
-              print('Rendered translated text: "$translatedText"');
-              return Text(
-                translatedText,
-                style: widget.style,
-                textAlign: widget.textAlign,
-                maxLines: widget.maxLines,
-                overflow: widget.overflow,
-              );
-            }
-          },
+    return FutureBuilder<String>(
+      future: _future,
+      builder: (context, snapshot) {
+        final text = snapshot.data ?? widget.text;
+
+        return Text(
+          text,
+          style: widget.style,
+          softWrap: widget.softwrap,
+          textAlign: widget.textAlign,
+          maxLines: widget.maxLines,
+          overflow: widget.overflow,
         );
       },
     );
   }
 }
+
 
 // Example usage widget
 class AutoTranslateApp extends StatelessWidget {

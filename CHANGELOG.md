@@ -1,6 +1,13 @@
 # Changelog
 
 ```markdown
+   ## 0.1.4
+   - Added Caching of translations.
+   - Improved translation mode checks.
+   - Optimized to handle more widgets without lag.
+   - Removed unnecessary rebuilds.
+   - Added experimental folder(The name pretty much explains it all).
+
    ## 0.1.3
    - Updated Offline translations.
    - Increased Timeout Duration.
