@@ -7,7 +7,7 @@ import 'package:translator/translator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
-/// Offline data (import from your own file)
+/// Offline data
 const Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
 
 /// Language provider with caching & efficient connectivity monitoring
@@ -83,6 +83,7 @@ class LanguageProvider2 with ChangeNotifier {
   // });
   InternetConnection().onStatusChange.listen((status) {
   _isOnline = status == InternetStatus.connected;
+  print(' Internet connection status changed: ${_isOnline ? 'Online' : 'Offline'}');
   notifyListeners();
 });
   }
