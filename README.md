@@ -25,6 +25,7 @@ dependencies:
   provider: ^6.1.5+1
   translator: ^1.0.4+1
   connectivity_plus: ^7.0.0
+  internet_connection_checker_plus: ^2.9.1
 ```
 
 Run `flutter pub get` to install the dependencies.

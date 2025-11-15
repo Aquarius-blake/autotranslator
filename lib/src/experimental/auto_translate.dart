@@ -1,10 +1,11 @@
 import 'dart:async';
-import 'dart:io';
+// import 'dart:io';
 import 'package:autotranslator_widget/src/Translations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:translator/translator.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 /// Offline data (import from your own file)
 const Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
@@ -33,16 +34,16 @@ class LanguageProvider2 with ChangeNotifier {
     _initConnectivityListener();
   }
 
-  Future<bool> _hasInternet() async {
-  try {
-    final result = await InternetAddress.lookup('google.com')
-        .timeout(const Duration(seconds: 3));
-    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-      return true;
-    }
-  } catch (_) {}
-  return false;
-}
+//   Future<bool> _hasInternet() async {
+//   try {
+//     final result = await InternetAddress.lookup('google.com')
+//         .timeout(const Duration(seconds: 3));
+//     if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//       return true;
+//     }
+//   } catch (_) {}
+//   return false;
+// }
 
   /// listen to connectivity changes ONCE.
   void _initConnectivityListener() {
@@ -57,29 +58,33 @@ class LanguageProvider2 with ChangeNotifier {
     //     notifyListeners();
     //   }
     // });
-    _connectivitySubscription =
-      connectivity.onConnectivityChanged.listen((results) async {
-    final connected =
-        results == ConnectivityResult.mobile ||
-        results == ConnectivityResult.wifi ||
-        results == ConnectivityResult.ethernet;
+  //   _connectivitySubscription =
+  //     connectivity.onConnectivityChanged.listen((results) async {
+  //   final connected =
+  //       results == ConnectivityResult.mobile ||
+  //       results == ConnectivityResult.wifi ||
+  //       results == ConnectivityResult.ethernet;
 
-      print("Device Connectivity changed: ${connected ? 'Online' : 'Offline'}");
-    if (!connected) {
-      // Interface may be down → report offline
-      _isOnline = false;
-      notifyListeners();
-      return;
-    }
+  //     print("Device Connectivity changed: ${connected ? 'Online' : 'Offline'}");
+  //   if (!connected) {
+  //     // Interface may be down → report offline
+  //     _isOnline = false;
+  //     notifyListeners();
+  //     return;
+  //   }
 
-    // Check actual internet access
-    final internet = await _hasInternet();
+  //   // Check actual internet access
+  //   final internet = await _hasInternet();
 
-    if (_isOnline != internet) {
-      _isOnline = internet;
-      notifyListeners();
-    }
-  });
+  //   if (_isOnline != internet) {
+  //     _isOnline = internet;
+  //     notifyListeners();
+  //   }
+  // });
+  InternetConnection().onStatusChange.listen((status) {
+  _isOnline = status == InternetStatus.connected;
+  notifyListeners();
+});
   }
 
   /// Set language with tiny debounce to avoid rebuild storms
