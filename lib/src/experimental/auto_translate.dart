@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:autotranslator_widget/src/Translations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,20 +33,53 @@ class LanguageProvider2 with ChangeNotifier {
     _initConnectivityListener();
   }
 
-  /// Instead of checking connectivity every call,
-  /// we listen to changes ONCE.
+  Future<bool> _hasInternet() async {
+  try {
+    final result = await InternetAddress.lookup('google.com')
+        .timeout(const Duration(seconds: 3));
+    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+  /// listen to connectivity changes ONCE.
   void _initConnectivityListener() {
+    // _connectivitySubscription =
+    //     this.connectivity.onConnectivityChanged.listen((results) {
+    //   final online = results == ConnectivityResult.mobile ||
+    //       results == ConnectivityResult.wifi ||
+    //       results == ConnectivityResult.ethernet;
+    //     print(' Connectivity changed: ${online ? 'Online' : 'Offline'}');
+    //   if (online != _isOnline) {
+    //     _isOnline = online;
+    //     notifyListeners();
+    //   }
+    // });
     _connectivitySubscription =
-        this.connectivity.onConnectivityChanged.listen((results) {
-      final online = results == ConnectivityResult.mobile ||
-          results == ConnectivityResult.wifi ||
-          results == ConnectivityResult.ethernet;
-        print(' Connectivity changed: ${online ? 'Online' : 'Offline'}');
-      if (online != _isOnline) {
-        _isOnline = online;
-        notifyListeners();
-      }
-    });
+      connectivity.onConnectivityChanged.listen((results) async {
+    final connected =
+        results == ConnectivityResult.mobile ||
+        results == ConnectivityResult.wifi ||
+        results == ConnectivityResult.ethernet;
+
+      print("Device Connectivity changed: ${connected ? 'Online' : 'Offline'}");
+    if (!connected) {
+      // Interface may be down → report offline
+      _isOnline = false;
+      notifyListeners();
+      return;
+    }
+
+    // Check actual internet access
+    final internet = await _hasInternet();
+
+    if (_isOnline != internet) {
+      _isOnline = internet;
+      notifyListeners();
+    }
+  });
   }
 
   /// Set language with tiny debounce to avoid rebuild storms
