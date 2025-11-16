@@ -7,7 +7,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
 /// Offline data
-const Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
+Map<String, Map<String, String>> _offlineTranslations = offlineTranslations;
 
 /// Language provider with caching & efficient connectivity monitoring
 class LanguageProvider with ChangeNotifier {
