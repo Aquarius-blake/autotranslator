@@ -184,3 +184,80 @@ class _AutoTranslateText2State extends State<AutoTranslateText2> {
     );
   }
 }
+
+class AutoTranslateParagraph extends StatefulWidget {
+  final TextSpan textSpan; // entire tree of spans
+  final TextAlign? textAlign;
+  final TextStyle? defaultStyle;
+
+  const AutoTranslateParagraph({
+    super.key,
+    required this.textSpan,
+    this.textAlign,
+    this.defaultStyle,
+  });
+
+  @override
+  State<AutoTranslateParagraph> createState() => _AutoTranslateParagraphState();
+}
+
+class _AutoTranslateParagraphState extends State<AutoTranslateParagraph> {
+  late Future<TextSpan> _translatedSpanFuture;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = Provider.of<LanguageProvider2>(context, listen: false);
+    _translatedSpanFuture = _translateSpanTree(widget.textSpan, provider);
+  }
+
+  Future<TextSpan> _translateSpanTree(
+      TextSpan original, LanguageProvider2 provider) async {
+    // Translate the main text
+    final translatedText = await provider.translateText(
+      original.text ?? "",
+      provider.selectedLanguage,
+    );
+
+    // Recursively translate child spans
+    final translatedChildren = original.children == null
+        ? null
+        : await Future.wait(original.children!.map((child) async {
+            if (child is TextSpan) {
+              return await _translateSpanTree(child, provider);
+            } else {
+              return child; // Non-TextSpan elements (e.g., WidgetSpan) stay unchanged
+            }
+          }));
+
+    return TextSpan(
+      text: translatedText,
+      style: original.style,
+      children: translatedChildren,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<LanguageProvider2, String>(
+      selector: (_, p) => p.selectedLanguage,
+      builder: (context, lang, _) {
+        final provider = Provider.of<LanguageProvider2>(context, listen: false);
+
+        return FutureBuilder<TextSpan>(
+          future: _translateSpanTree(widget.textSpan, provider),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Text("...");
+            }
+
+            return RichText(
+              textAlign: widget.textAlign ?? TextAlign.start,
+              text: snapshot.data!,
+            );
+          },
+        );
+      },
+    );
+  }
+}
