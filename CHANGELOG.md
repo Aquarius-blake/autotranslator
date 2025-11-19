@@ -1,6 +1,10 @@
 # Changelog
 
 ```markdown
+  ## 0.1.5
+   - Added new Translation widget for Textspans - `AutoTranslateParagraph`.
+   - All widgets with the suffix `2` are experimental, use at your own risk.
+
    ## 0.1.4
    - Added Caching of translations.
    - Improved translation mode checks.

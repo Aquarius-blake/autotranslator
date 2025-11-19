@@ -185,12 +185,12 @@ class _AutoTranslateText2State extends State<AutoTranslateText2> {
   }
 }
 
-class AutoTranslateParagraph extends StatefulWidget {
+class AutoTranslateParagraph2 extends StatefulWidget {
   final TextSpan textSpan; // entire tree of spans
   final TextAlign? textAlign;
   final TextStyle? defaultStyle;
 
-  const AutoTranslateParagraph({
+  const AutoTranslateParagraph2({
     super.key,
     required this.textSpan,
     this.textAlign,
@@ -198,10 +198,11 @@ class AutoTranslateParagraph extends StatefulWidget {
   });
 
   @override
-  State<AutoTranslateParagraph> createState() => _AutoTranslateParagraphState();
+  State<AutoTranslateParagraph2> createState() => _AutoTranslateParagraph2State();
 }
 
-class _AutoTranslateParagraphState extends State<AutoTranslateParagraph> {
+class _AutoTranslateParagraph2State extends State<AutoTranslateParagraph2> {
+  // ignore: unused_field
   late Future<TextSpan> _translatedSpanFuture;
 
   @override
