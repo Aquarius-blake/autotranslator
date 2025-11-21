@@ -1,7 +1,11 @@
 # Changelog
 
 ```markdown
-  ## 0.1.5
+   ## 0.1.6
+   - License change
+  
+
+   ## 0.1.5
    - Added new Translation widget for Textspans - `AutoTranslateParagraph`.
    - All widgets with the suffix `2` are experimental, use at your own risk.
 
