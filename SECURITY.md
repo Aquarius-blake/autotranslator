@@ -4,7 +4,7 @@ Thank you for taking the time to report a security vulnerability in the auto_tra
 How to Report a Vulnerability
 Please DO NOT publicly disclose vulnerabilities until they have been addressed. Instead, report them privately:
 
-Email: Send a detailed report to blakeind72@gmail.com (replace with your contact email)
+Email: Send a detailed report to blakeind72@gmail.com 
 
 GitHub Security Advisories: 
 
