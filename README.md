@@ -207,4 +207,4 @@ Contributions are welcome! Please:
 
 ## License
 
-This package is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+This package is licensed under the Apache 2.0 License. See the [LICENSE](LICENSE) file for details.
