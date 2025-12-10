@@ -183,7 +183,7 @@ class AutoTranslateApp extends StatelessWidget {
 ## Configuration
 
 - **Online Translations**: Requires an internet connection. The `translator` package uses Google Translate API. Check its documentation for any API key requirements.
-- **Offline Translations**: Add your text strings to `_offlineTranslations` in `lib/auto_translate.dart`.
+- **Offline Translations**: Add your Language map file in `lib/src/Languages`.
 - **Timeouts**: The package includes a 10-second timeout for connectivity checks and online translations to prevent hanging.
 
 ## Debugging

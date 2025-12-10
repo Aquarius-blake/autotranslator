@@ -190,12 +190,14 @@ class AutoTranslateParagraph extends StatefulWidget {
   final TextSpan textSpan; // entire tree of spans
   final TextAlign? textAlign;
   final TextStyle? defaultStyle;
+  final bool? trim;
 
   const AutoTranslateParagraph({
     super.key,
     required this.textSpan,
     this.textAlign,
     this.defaultStyle,
+    this.trim = false,
   });
 
   @override
@@ -233,7 +235,7 @@ class _AutoTranslateParagraphState extends State<AutoTranslateParagraph> {
           }));
 
     return TextSpan(
-      text: translatedText,
+      text: widget.trim! ? "$translatedText ".trim() :"$translatedText ",
       style: original.style,
       children: translatedChildren,
     );
