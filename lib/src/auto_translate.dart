@@ -237,6 +237,14 @@ class _AutoTranslateParagraphState extends State<AutoTranslateParagraph> {
     return TextSpan(
       text: widget.trim! ? "$translatedText ".trim() :"$translatedText ",
       style: original.style,
+      recognizer: original.recognizer,
+      mouseCursor: original.mouseCursor,
+      onEnter: original.onEnter,
+      onExit: original.onExit,
+      spellOut: original.spellOut,
+      semanticsLabel: original.semanticsLabel,
+      semanticsIdentifier: original.semanticsIdentifier,
+      locale: original.locale,
       children: translatedChildren,
     );
   }

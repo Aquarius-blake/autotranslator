@@ -1,6 +1,9 @@
 # Changelog
 
 ```markdown
+   ## 0.1.8
+   - Fixed issues in `AutoTranslateParagraph` Textspans
+   
    ## 0.1.7
    - Added trim option to `AutoTranslateParagraph` Textspans
 
